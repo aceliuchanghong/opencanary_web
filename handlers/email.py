@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-"""
+"""  
   Author: pirogue 
   Purpose: 邮件配置增删改
   Site: http://pirogue.org 
@@ -10,46 +10,42 @@
 from util.auth import jwtauth
 from handlers.base import BaseHandler
 import json
-from util.config import ini_info
-# import sys
-# sys.path.append("..")
-from application import emailfile
-
-ini = ini_info(emailfile)
+from service.emailconfigservice import get_email_config, save_email_config
 
 @jwtauth
 class EmailModifyHandler(BaseHandler):
-    # 接收json 请求修改email配置文件
-
-
-    
-    def write_error(self,status_code,**kwargs):
+    def write_error(self, status_code, **kwargs):
         self.write("Unable to parse JSON.")
 
     def post(self):
-        # 接收提交过来的email配置
         if self.request.headers["Content-Type"].startswith("application/json"):
-            json_args = json.loads(self.request.body.decode('utf-8'))
-            
-            # 更新email.ini
-            ini.cfg_load()
-            ini.set_item('email', 'user', json_args['user'])
-            ini.save()
-            self.write(json_args)
+            try:
+                json_args = json.loads(self.request.body.decode('utf-8'))
+                config_data = {
+                    'mail_host': json_args.get('mail_host'),
+                    'mail_user': json_args.get('mail_user'),
+                    'mail_pass': json_args.get('mail_pass'),
+                    'mail_postfix': json_args.get('mail_postfix'),
+                    'recipients': json_args.get('recipients')
+                }
+                
+                if save_email_config(config_data):
+                    self.write({"status": "success", "message": "邮箱配置已更新"})
+                else:
+                    self.set_status(500)
+                    self.write({"status": "error", "message": "保存邮箱配置失败"})
+            except Exception as e:
+                self.set_status(400)
+                self.write({"status": "error", "message": str(e)})
         else:
-            self.json_args = None
-            message = 'Unable to parse JSON.'
-            self.send_error(status_code=400) # 向浏览器发送错误状态码，会调用write_error
+            self.set_status(400)
+            self.write({"status": "error", "message": "Invalid Content-Type"})
 
     def get(self):
-
-        ini.cfg_load()
-
-        user = ini.cfg_dump()[0][0]
-        email = ini.cfg_dump()[0][1]
-        email_json = {
-            user:email
-        }
-
-        self.write(email_json)
+        config = get_email_config()
+        if config:
+            self.write(config)
+        else:
+            self.set_status(404)
+            self.write({"status": "error", "message": "未找到邮箱配置"})
 

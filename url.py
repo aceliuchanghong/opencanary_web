@@ -15,6 +15,7 @@ url = [
     # LoginHandler url
     (r"/", index.IndexHandler),
     (r"/auth/*", login.AuthHandler),
+    (r"/auth/password/", password.PasswordHandler),
     (r"/log/*", logcollection.ReceiveJsonHandler),
     (r"/log/list/*", paginationlog.GetlistJsonHandler),
     (r"/mail/*", email.EmailModifyHandler),
