@@ -8,7 +8,7 @@
 """
 
 from handlers import login, hello
-from handlers import logcollection, paginationlog, hello, email, index, chart, whiteiplist, whiteport, host
+from handlers import logcollection, paginationlog, hello, email, index, chart, whiteiplist, whiteport, host, password
 import unittest
 
 url = [

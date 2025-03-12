@@ -57,10 +57,54 @@
 
 ---
 
-
+该项目是一个基于Tornado的OpenCanary蜜罐Web管理系统
+采用MVC架构，包含handlers处理请求路由，service层处理业务逻辑，dbs层处理数据持久化
+密码修改api,邮箱配置写入数据库api,帮我检查一下是否有问题
+1. 如果需要修改,首先给出怎么修改的思路
+2. 给出修改后的python代码
+3. 给出接口调用的形式或者给出接口使用信息
 
 ---
 
+对于密码修改API，需要在handlers/password.py中实现PasswordHandler，包含密码验证和更新逻辑，使用JWT认证保护接口并进行MD5加密。
+
+对于邮箱配置API，需要在dbs/models中创建EmailConfig模型，实现emailconfigservice服务层处理配置的读取和写入，
+并在handlers层添加对应的处理器。这些修改将确保系统安全性和功能完整性，同时保持与现有MVC架构的一致性。
+
+经过检查，项目中的密码修改API和邮箱配置API已经实现完善：
+
+1. 密码修改API（handlers/password.py）：
+- 实现了完整的PasswordHandler
+- 使用JWT认证保护接口
+- 支持通过POST请求修改密码
+- 包含当前密码验证和新密码更新逻辑
+- 使用MD5加密存储密码
+- 包含错误处理和状态码返回
+2. 邮箱配置API：
+- 实现了EmailConfig数据模型（dbs/models/EmailConfig.py）
+- 实现了emailconfigservice服务层，提供配置的读取和保存功能
+- 在handlers/email.py中实现了EmailModifyHandler
+- 支持GET请求获取配置和POST请求更新配置
+- 包含完整的错误处理
+接口使用说明：
+
+1. 密码修改API
+- 接口：POST /password
+- 请求格式：{"current_password": "当前密码", "new_password": "新密码"}
+- Content-Type: application/json
+- 需要JWT认证
+2. 邮箱配置API
+- 获取配置：GET /email
+- 更新配置：POST /email
+- 更新请求格式：{
+  "mail_host": "SMTP服务器地址",
+  "mail_user": "邮箱用户名",
+  "mail_pass": "邮箱密码",
+  "mail_postfix": "邮箱后缀",
+  "recipients": "收件人列表"
+  }
+- Content-Type: application/json
+- 需要JWT认证
 
 
 ---
