@@ -182,7 +182,21 @@ python server.py
 
 ---
 
-
+python server.py
+报错:
+```
+`Host`.hostname AS `Host_hostname`, `Host`.ip AS `Host_ip`, `Host`.status AS `Host_status`
+FROM `Host`
+WHERE `Host`.status = %(status_1)s ORDER BY `Host`.last_time DESC
+2025-03-13 19:22:16,518 INFO sqlalchemy.engine.Engine [cached since 150s ago] {'status_1': 'online'}
+(pymysql.err.ProgrammingError) (1146, "Table 'honeypot.host' doesn't exist")
+[SQL: SELECT `Host`.id AS `Host_id`, `Host`.last_time AS `Host_last_time`, `Host`.hostname AS `Host_hostname`, `Host`.ip AS `Host_ip`, `Host`.status AS `Host_status`
+FROM `Host`
+WHERE `Host`.status = %(status_1)s ORDER BY `Host`.last_time DESC]
+[parameters: {'status_1': 'online'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-03-13 19:20:46,513 INFO sqlalchemy.engine.Engine ROLLBACK
+```
 
 ---
 

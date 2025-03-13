@@ -13,8 +13,13 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 # 数据库配置
 DB_HOST = "127.0.0.1"
 DB_USER = "root"
-DB_PWD = "huanchengzijidemima"
+DB_PWD = "torch_H0n3yP0t"
 DB_NAME = "honeypot"
+"""
+mysql -u root -p
+CREATE DATABASE honeypot CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+SHOW DATABASES;
+"""
 
 
 # # 创建对象基类
