@@ -200,7 +200,9 @@ WHERE `Host`.status = %(status_1)s ORDER BY `Host`.last_time DESC]
 
 ---
 
+对于此项目:OpenCanary蜜罐Web管理系统,使用Tornado框架实现，采用MVC架构，包含handlers处理请求路由，service层处理业务逻辑，dbs层处理数据持久化。
 
+`python server.py`启动这个项目之前,我需要建立哪些表,`mysql -u root -p`之后怎么执行,我想使得登录的时候是admin/admin,怎么完成这个操作
 
 ---
 

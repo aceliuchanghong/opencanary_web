@@ -19,6 +19,7 @@ DB_NAME = "honeypot"
 mysql -u root -p
 CREATE DATABASE honeypot CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 SHOW DATABASES;
+USE honeypot;
 """
 
 

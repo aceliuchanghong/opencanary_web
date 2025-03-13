@@ -22,7 +22,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-define("port", default=2080, help="run on the given port", type=int)
+define("port", default=80, help="run on the given port", type=int)
 define("address", default="127.0.0.1", help="bind to the given address", type=str)
 
 

@@ -59,9 +59,8 @@
                                     localStorage.setItem('role', this.role);
                                     this.$router.push('/');
                                 } else{
-                                    this.$router.push('/login')
+                                    this.$message.error(this.role);
                                 }
-
                                 // console.log(this.restoken);
                             })
 
@@ -80,7 +79,7 @@
                                         localStorage.setItem('role', this.role);
                                         this.$router.push('/');
                                     } else{
-                                        this.$router.push('/login')
+                                        this.$message.error(this.role);
                                     }
                                     // console.log(this.restoken);
                                 })
