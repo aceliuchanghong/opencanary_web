@@ -1,0 +1,23 @@
+[project]
+name = "opencanary-web"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "apscheduler>=3.11.0",
+    "configparser>=7.2.0",
+    "easy-media-utils>=0.1.5",
+    "litserve>=0.2.6",
+    "openai>=1.65.4",
+    "pyjwt>=2.10.1",
+    "pymysql>=1.1.1",
+    "python-dotenv>=1.0.1",
+    "python-jwt>=4.1.0",
+    "sqlalchemy>=2.0.39",
+    "termcolor>=2.5.0",
+    "tornado>=6.4.2",
+]
+
+[tool.setuptools]
+py-modules = []
