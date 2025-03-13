@@ -1,33 +1,38 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 """
-  Author: pirogue 
+  Author: Lch 
   Purpose: 数据库配置文件
-  Site: http://pirogue.org 
   Created: 2018-02-01 15:04:29
+  Changed: 2025-03-13 18:42:29
 """
-
-
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
 # 数据库配置
-DB_HOST = '127.0.0.1'
-DB_USER = 'root'
-DB_PWD = 'huanchengzijidemima'
-DB_NAME = 'honeypot'
+DB_HOST = "127.0.0.1"
+DB_USER = "root"
+DB_PWD = "huanchengzijidemima"
+DB_NAME = "honeypot"
 
-# 创建对象基类
-Base = declarative_base()
+
+# # 创建对象基类
+# Base = declarative_base()
+# （推荐使用 DeclarativeBase）
+class Base(DeclarativeBase):
+    pass
+
 
 # 初始化数据库连接
-engine = create_engine('mysql+pymysql://%s:%s@%s/%s?charset=utf8' %
-                       (DB_USER, DB_PWD, DB_HOST, DB_NAME),
-                   encoding='utf-8', echo=True,
-                 pool_size=100, pool_pre_ping=True, pool_recycle=3600)
+engine = create_engine(
+    f"mysql+pymysql://{DB_USER}:{DB_PWD}@{DB_HOST}/{DB_NAME}?charset=utf8",
+    echo=True,  # 调试时开启，生产环境建议设为 False
+    pool_size=100,
+    pool_pre_ping=True,
+    pool_recycle=3600,
+)
 
-# 创建DBsession类型
+# 创建 Session 类型
 Session = sessionmaker(bind=engine)
 DBSession = Session()

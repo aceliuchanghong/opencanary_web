@@ -1,5 +1,17 @@
 提示词
 
+```python
+# 初始化python环境
+uv init
+uv venv
+source .venv/bin/activate
+# win
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+.venv/Scripts/activate
+
+uv pip install .
+```
+
 ---
 
 密码修改 api 缺失,帮我检查项目
@@ -109,17 +121,64 @@
 
 ---
 
-
----
-
-
-
----
-
+由于我的开发环境在windiws,所以进行`python`虚拟环境需要执行:
+```shell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+.venv/Scripts/activate
+```
 
 
 ---
 
+帮我分析一下这个项目是前后端分离的吗?
+给出mermaid架构图
+
+---
+
+```mermaid
+graph TD
+    subgraph 前端
+        A[静态资源 - dist目录] --> B[HTML/CSS/JS]
+    end
+    
+    subgraph Tornado框架
+        C[URL路由] --> D[Handlers层]
+        D --> E[Service层]
+        E --> F[数据持久化层]
+    end
+    
+    subgraph 数据库
+        G[MySQL数据库]
+    end
+    
+    B <--> C
+    F <--> G
+    
+    subgraph API接口
+        H[密码修改API] 
+        I[邮箱配置API]
+        J[其他功能API]
+    end
+    
+    D --> H
+    D --> I
+    D --> J
+```
+
+---
+
+由于我的开发环境在windiws,所以进行`python`虚拟环境需要执行:
+```shell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+.venv/Scripts/activate
+```
+对于此项目:OpenCanary蜜罐Web管理系统,使用Tornado框架实现，采用MVC架构，包含handlers处理请求路由，service层处理业务逻辑，dbs层处理数据持久化。
+
+我该怎么启动这个项目?
+
+---
+
+python server.py
 
 ---
 

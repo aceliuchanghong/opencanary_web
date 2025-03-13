@@ -1,44 +1,67 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-"""
-  Author: pirogue 
-  Purpose: 计划任务模块
-  Site: http://pirogue.org 
-  Created: 2018-02-08 11:18:10
-"""
-
 from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from service.hostservice import hostonline
 import atexit
-import fcntl
-#jobstores = {
-#    'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite')
-#}
+import platform
 
 sched = BackgroundScheduler()
 
-# sched.add_listener(my_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
+
+# 根据平台选择锁机制
+if platform.system() != "Windows":
+    import fcntl
+else:
+    import msvcrt
+
+# 初始化调度器
+sched = BackgroundScheduler()
 
 
 def check_scheduler():
-    f = open("scheduler.lock", "wb")
-    sched.start()
-    try:
-        fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        if sched.get_job('check_host'):
-            pass
+    lock_file = "scheduler.lock"
+
+    # 使用 with 语句管理文件资源
+    with open(lock_file, "wb") as f:
+        if platform.system() != "Windows":
+            # Linux/macOS 使用 fcntl
+            try:
+                fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                sched.start()  # 启动调度器
+                if sched.get_job("check_host"):
+                    print("Scheduler already has 'check_host' job.")
+                else:
+                    host_scheduler()
+            except BlockingIOError:
+                print("Another instance is already running.")
         else:
-            host_scheduler()
-    except:
-            pass
-    def unlock():
-        fcntl.flock(f, fcntl.LOCK_UN)
-        f.close()
-    atexit.register(unlock)
+            # Windows 使用 msvcrt
+            try:
+                msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+                sched.start()  # 启动调度器
+                if sched.get_job("check_host"):
+                    print("Scheduler already has 'check_host' job.")
+                else:
+                    host_scheduler()
+            except IOError:
+                print("Another instance is already running.")
+
+        # 定义解锁函数
+        def unlock():
+            if platform.system() != "Windows":
+                fcntl.flock(f, fcntl.LOCK_UN)
+            else:
+                msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
+            # 文件已在 with 语句中关闭，无需手动 f.close()
+
+        atexit.register(unlock)
 
 
 def host_scheduler():
-    sched.add_job(hostonline, 'interval', seconds=30, id='check_host')
+    sched.add_job(hostonline, "interval", seconds=30, id="check_host")
     print("It is \033[1;35m running \033[0m!")
     return True
+
+
+if __name__ == "__main__":
+    check_scheduler()
